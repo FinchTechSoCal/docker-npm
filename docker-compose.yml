@@ -28,6 +28,8 @@ services:
       test: ["CMD", "/bin/check-health"]
       interval: 10s
       timeout: 3s
+    depends_on:
+      - npm-db
 #
   db:
     image: lscr.io/linuxserver/mariadb
