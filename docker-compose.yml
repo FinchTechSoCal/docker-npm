@@ -10,6 +10,12 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+      - DB_MYSQL_HOST=${NPMDBHOST}
+      - DB_MYSQL_PORT=${NPMDBPORT}
+      - DB_MYSQL_USER=${NPMUSR}
+      - DB_MYSQL_PASSWORD=${NPMPASS}
+      - DB_MYSQL_NAME=${NPMDBNAME}
+      - DISABLE_IPV6="true"
     volumes:
       - ${LOCVOL1}npm:/data
       - ${LOCVOL1}npm-certs:/etc/letsencrypt
