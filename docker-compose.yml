@@ -23,6 +23,18 @@ services:
       interval: 10s
       timeout: 3s
 #
+  db:
+    image: lscr.io/linuxserver/mariadb
+    container_name: npm-db
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${LOCVOL1}npm-db:/config
+#    ports:
+#      - 3306:3306
+    restart: unless-stopped
 #
 networks:
   default:
