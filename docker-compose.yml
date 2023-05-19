@@ -38,6 +38,11 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+      - DOCKER_MODS=linuxserver/mods:universal-cron
+      - MYSQL_ROOT_PASSWORD=${NPMSAPASS}
+      - MYSQL_DATABASE=${NPMDBNAME}
+      - MYSQL_USER=${NPMUSR}
+      - MYSQL_PASSWORD=${NPMPASS}
     volumes:
       - ${LOCVOL1}npm/db:/config
     restart: unless-stopped
