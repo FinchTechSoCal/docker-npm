@@ -17,8 +17,8 @@ services:
       - DB_MYSQL_NAME=${NPMDBNAME}
       - DISABLE_IPV6="true"
     volumes:
-      - ${LOCVOL1}npm:/data
-      - ${LOCVOL1}npm-certs:/etc/letsencrypt
+      - ${LOCVOL1}npm/app:/data
+      - ${LOCVOL1}npm/certs:/etc/letsencrypt
     ports:
       - 443:443
       - 80:80
@@ -32,19 +32,17 @@ services:
       - db
 #
   db:
-    image: lscr.io/linuxserver/mariadb
+    image: lscr.io/linuxserver/mariadb:latest
     container_name: npm-db
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - ${LOCVOL1}npm-db:/config
-#    ports:
-#      - 3306:3306
+      - ${LOCVOL1}npm/db:/config
     restart: unless-stopped
 #
 networks:
   default:
-    external:
-      name: ${CONNET}
+    external: true
+    name: ${CONNET}
