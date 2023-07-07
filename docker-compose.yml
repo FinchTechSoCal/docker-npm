@@ -1,21 +1,12 @@
----
-version: "2.1"
+--- 
+version: '3.7'
 services:
   npm:
     image: jc21/nginx-proxy-manager:latest
     container_name: npm
 #    cap_add:
 #      - NET_ADMIN
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - DB_MYSQL_HOST=${NPMDBHOST}
-      - DB_MYSQL_PORT=${NPMDBPORT}
-      - DB_MYSQL_USER=${NPMUSR}
-      - DB_MYSQL_PASSWORD=${NPMPASS}
-      - DB_MYSQL_NAME=${NPMDBNAME}
-      - DISABLE_IPV6="true"
+    env_file: stack.env # used by portainer
     volumes:
       - ${LOCVOL1}npm/app:/data
       - ${LOCVOL1}npm/certs:/etc/letsencrypt
@@ -34,20 +25,12 @@ services:
   db:
     image: lscr.io/linuxserver/mariadb:latest
     container_name: npm-db
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - DOCKER_MODS=linuxserver/mods:universal-cron
-      - MYSQL_ROOT_PASSWORD=${NPMSAPASS}
-      - MYSQL_DATABASE=${NPMDBNAME}
-      - MYSQL_USER=${NPMUSR}
-      - MYSQL_PASSWORD=${NPMPASS}
+    env_file: stack.env # used by portainer
     volumes:
       - ${LOCVOL1}npm/db:/config
     restart: unless-stopped
 #
 networks:
   default:
-    external: true
     name: ${CONNET}
+    external: true
