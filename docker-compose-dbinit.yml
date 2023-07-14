@@ -1,0 +1,16 @@
+--- 
+version: '3.7'
+services:
+#
+  db:
+    image: lscr.io/linuxserver/mariadb:latest
+    container_name: npm-db
+    env_file: stack.env # used by portainer
+    volumes:
+      - ${LOCVOL1}npm/db:/config
+    restart: unless-stopped
+#
+networks:
+  default:
+    name: ${CONNET}
+    external: true
