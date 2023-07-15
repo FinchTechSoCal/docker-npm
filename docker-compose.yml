@@ -15,9 +15,9 @@ services:
       - PGID=${NPM_PUID}
       - DB_MYSQL_HOST=${MYSQL_HOST}
       - DB_MYSQL_PORT=${MYSQL_PORT}
-      - DB_MYSQL_USER=${MYSQL_PASSWORD}
-      - DB_MYSQL_PASSWORD=${DB_MYSQL_PASSWORD}
       - DB_MYSQL_NAME=${MYSQL_DATABASE}
+      - DB_MYSQL_USER=${MYSQL_USER}
+      - DB_MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - DISABLE_IPV6=${DISABLE_IPV6}
     volumes:
       - ${LOCVOL1}npm/app:/data
