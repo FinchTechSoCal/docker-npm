@@ -1,19 +1,38 @@
+#
+# https://nginxproxymanager.com/setup/#using-mysql-mariadb-database
+#
 --- 
 version: '3.7'
 services:
   npm:
     image: jc21/nginx-proxy-manager:latest
     container_name: npm
-#    cap_add:
-#      - NET_ADMIN
-    env_file: stack.env # used by portainer
+    cap_add:
+      - NET_ADMIN
+    env_file: stack.env #used by portainer
+    environment:
+      - PUID=${NPM_PUID}
+      - PGID=${NPM_PUID}
+      - DB_MYSQL_HOST=${MYSQL_HOST}
+      - DB_MYSQL_PORT=${MYSQL_PORT}
+      - DB_MYSQL_USER=${MYSQL_PASSWORD}
+      - DB_MYSQL_PASSWORD=${DB_MYSQL_PASSWORD}
+      - DB_MYSQL_NAME=${MYSQL_DATABASE}
+      - DISABLE_IPV6=${DISABLE_IPV6}
     volumes:
       - ${LOCVOL1}npm/app:/data
       - ${LOCVOL1}npm/certs:/etc/letsencrypt
     ports:
       - 443:443
       - 80:80
-      - 10081:81
+      - 10081:81 # NPM admin interface, can disable once 80/443 proxy is working
+      # Add any other Stream port you want to expose
+      # - '21:21' # FTP
+      # - '2222:22' # SSH 2222 to 22
+    networks:
+      default:
+      #directnet: # needed so the proxy service/app can have it's own IP
+        #ipv4_address: ${MACNETADDR}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "/bin/check-health"]
@@ -24,13 +43,26 @@ services:
 #
   db:
     image: lscr.io/linuxserver/mariadb:latest
-    container_name: npm-db
-    env_file: stack.env # used by portainer
+    container_name: ${MYSQL_HOST}
+    env_file: stack.env #used by portainer
+    environment:
+      - PUID=${PUID}
+      - PGID=${PUID}
+      - TZ=${TZ}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} #optical, only used once at container creation
+      - MYSQL_DATABASE=${MYSQL_DATABASE} #optical, only used once at container creation
+      - MYSQL_USER=${MYSQL_USER} #optical, only used once at container creation
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD} #optical, only used once at container creation
     volumes:
       - ${LOCVOL1}npm/db:/config
+    #ports:
+      #- 3306:3306
     restart: unless-stopped
 #
 networks:
   default:
     name: ${CONNET}
     external: true
+  #directnet: # needed so the proxy service/app can have it's own IP
+    #name: ${MACNET}
+    #external: true
